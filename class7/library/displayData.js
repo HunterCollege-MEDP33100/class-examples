@@ -5,7 +5,7 @@ const libraryContainer = document.querySelector('.library');
     - element (HTMLElement)
     - title (string)
     - author (string)
-    - numCopies (number, the number of copies available)
+    - downloadCount (number, the number of downloads)
 
     Add the following methods:
     - displayBook():
@@ -13,12 +13,12 @@ const libraryContainer = document.querySelector('.library');
 */
 
 class Book {
-    constructor(element, title, author, numCopies) {
+    constructor(element, title, authors, downloadCount) {
         // console.log('Creating a book object...', title, author, numCopies, element);
         this.element = element;
         this.title = title;
-        this.author = author;
-        this.numCopies = numCopies;
+        this.authors = authors;
+        this.downloadCount = downloadCount;
 
         this.element.classList.add('book');
     }
@@ -32,18 +32,21 @@ class Book {
         this.element.appendChild(titleEl);
         // console.log(titleEl);
 
-        const authorEl = document.createElement('p');
-        authorEl.classList.add('book_author');
-        authorEl.innerText = this.author;
-        this.element.appendChild(authorEl);
-        // console.log(authorEl);
+        for (let i = 0; i < this.authors.length; i++) {
+            const authorEl = document.createElement('p');
+            authorEl.classList.add('book_author');
+            authorEl.innerText = this.authors[i].name
+            this.element.appendChild(authorEl);
+            // console.log(authorEl);
+        }
+        
 
-        if (this.numCopies) {
-            const numCopiesEl = document.createElement('p');
-            numCopiesEl.classList.add('book_num_copies');
-            numCopiesEl.innerText = this.numCopies;
+        if (this.downloadCount) {
+            const downloadCountEl = document.createElement('p');
+            downloadCountEl.classList.add('book_num_copies');
+            downloadCountEl.innerText = this.downloadCount;
             // console.log(numCopiesEl);
-             this.element.appendChild(numCopiesEl);
+             this.element.appendChild(downloadCountEl);
         }
         // console.log(bookEl);
     }
@@ -53,13 +56,13 @@ class Book {
         - Decreases the number of copies by 1 and prints how many copies are left.
         - If there are no more copies left, add a class "disabled" to the element.
     */
-    borrow() {
-        this.numCopies--;
-        this.displayBook();
-        if (this.numCopies < 1) {
-            this.element.classList.add('disabled');
-        }
-    }
+    // borrow() {
+    //     this.numCopies--;
+    //     this.displayBook();
+    //     if (this.numCopies < 1) {
+    //         this.element.classList.add('disabled');
+    //     }
+    // }
 }
 
 /*
