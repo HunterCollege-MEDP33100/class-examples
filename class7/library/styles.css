@@ -1,0 +1,63 @@
+body,
+html {
+    font-family: 'Courier New', Courier, monospace;
+    text-align: center;
+}
+
+.library {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 100%;
+
+}
+
+.book {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background: rgb(172, 226, 159);
+    color: black;
+    font-weight: bold;
+    padding: 10px;
+    border-radius: 10px;
+    text-align: center;
+    border-left: 4vw solid black;
+    font-size: 2vw;
+    width: 20vw;
+    aspect-ratio: 3 / 4;
+    background-size: cover;
+}
+
+.book:hover {
+    box-shadow: 0px 0px 10px 3px rgba(0,0,0,0.3);
+    transition: all ease 0.3s;
+    transform: scale(1.05);
+}
+
+.book.disabled {
+    background: rgb(171, 171, 171);
+    cursor: no-drop;
+    pointer-events: none;
+}
+
+.textbook {
+    background: rgb(255, 59, 59);
+}
+
+.ebook {
+    background: rgb(198, 241, 255);
+    color: black;
+}
+
+.book_title {
+    font-size: 1.5em;
+}
+
+.book_actions {
+    margin: 10px 0;
+    text-align: center;
+}
