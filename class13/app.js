@@ -1,3 +1,5 @@
+require('dotenv').config();
+const mongoose = require('mongoose');
 
 var createError = require('http-errors');
 var express = require('express');
@@ -11,6 +13,14 @@ const todoRouter = require('./routes/todo');
 
 var app = express();
 
+// Connect to MongoDB
+mongoose.connect(process.env.MONGO_URL)
+    .then(() => {
+        console.log('Connected to MongoDB')
+    })
+    .catch((error) => {
+        console.log('Error connecting to MongoDB', error);
+    })
 
 // view engine setup -- Don't need to worry about this
 app.set('views', path.join(__dirname, 'views'));

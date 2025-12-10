@@ -1,102 +1,81 @@
 var express = require('express');
 var fs = require('fs');
 var router = express.Router();
+const Items = require('../models/items');
 
 /* GET users listing. */
-router.get('/', function (req, res, next) {
-    fs.readFile('./data/todos.json', 'utf8', function (err, data) {
-        if (err) {
-            console.log(err);
-            res.statusCode = 404;
-            res.send('Sorry not found')
-        }
-
-        res.end(data);
-    })
+router.get('/', async function (req, res, next) {
+    try {
+        const items = await Items.find();
+        res.json(items);
+    } catch(error) {
+        console.log(error);
+        res.status(500);
+        res.send('Something went wrong');
+    }
 });
 
-router.post('/', function (request, response) {
-    console.log(request.body);
-    fs.readFile('./data/todos.json', 'utf8', function (err, data) {
-        if (err) {
-            console.log(err);
-            res.statusCode = 404;
-            res.send('Sorry not found')
-        }
-
-        // take request body -> javascript array
-        const todoItems = JSON.parse(data);
-        todoItems.push({
-            id: todoItems.length + 1,
-            name: request.body.name,
-            completed: request.body.completed,
-        });
-        console.log(todoItems);
-
-        fs.writeFile('./data/todos.json', JSON.stringify(todoItems), function(error, data) {
-            if (error) {
-                response.statusCode = '500';
-                response.send('Something went wrong');
-            }
-            response.end(JSON.stringify(todoItems));
-        })
-    })
+router.get('/all', async function() {
+    let totalValue = 0;
+    const items = Items.find();
+    res.json(item)
 })
 
-router.put('/:id', function(request, response) {
+router.get('/:id', async function (req, res){
+    const id = req.params.id;
+    try {
+        const item = await Items.find({ _id: id });
+        res.json(item);
+    } catch (error) {
+        console.log(error);
+        res.send('Something went wrong');
+    }
+})
+
+router.post('/', async function (request, response) {
+    console.log(request.body);
+
+    try {
+        const newFields = {
+            ...request.body,
+            createdAt: new Date(),
+            value: 0.25,
+        }
+        console.log(newFields)
+        const newItem = await Items.create(newFields);
+        response.json(newItem);
+    }  catch (error) {
+        console.log(error);
+        res.send('Something went wrong');
+    }
+
+})
+
+router.put('/:id', async function(request, response) {
     console.log(request.params.id);
     console.log(request.body);
-    fs.readFile('./data/todos.json', 'utf8', function (err, data) {
-        if (err) {
-            console.log(err);
-            res.statusCode = 404;
-            res.send('Sorry not found')
-        }
 
-        // take request body -> javascript array
-        const todoItems = JSON.parse(data);
-        for (let i = 0; i < todoItems.length; i++) {
-            if (todoItems[i].id === parseInt(request.params.id)) {
-                todoItems[i] = request.body
+    try {
+        const updatedItem = await Items.findByIdAndUpdate(
+            request.params.id,
+            {
+                ...request.body
             }
-        }
-        console.log(todoItems);
-
-        fs.writeFile('./data/todos.json', JSON.stringify(todoItems), function(error, data) {
-            if (error) {
-                response.statusCode = '500';
-                response.send('Something went wrong');
-            }
-            response.end(JSON.stringify(todoItems));
-        })
-    })
+        )
+        response.json(updatedItem);
+    } catch (error) {
+        console.log(error);
+        response.send('something went wrong')
+    }
 });
 
-router.delete('/:id', function(request, response) {
-    fs.readFile('./data/todos.json', 'utf8', function (err, data) {
-        if (err) {
-            console.log(err);
-            res.statusCode = 404;
-            res.send('Sorry not found')
-        }
-
-        // take request body -> javascript array
-        const todoItems = JSON.parse(data);
-        const updatedTodoItems = todoItems.filter(function(item) {
-            if (item.id !== parseInt(request.params.id)){
-                return item;
-            }
-        })
-        console.log(updatedTodoItems);
-
-        fs.writeFile('./data/todos.json', JSON.stringify(updatedTodoItems), function(error, data) {
-            if (error) {
-                response.statusCode = '500';
-                response.send('Something went wrong');
-            }
-            response.end(JSON.stringify(updatedTodoItems));
-        })
-    })
+router.delete('/:id', async function(request, response) {
+    try {
+        const deletedItem = await Items.findByIdAndDelete(request.params.id)
+    } catch(error) {
+        console.log(error);
+        response.send('something went wrong')
+    }
 })
 
 module.exports = router;
